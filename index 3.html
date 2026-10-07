@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>الفضاء… جزء من مستقبلنا</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#02030a;--fg:#f2f6ff;--acc:#6cc4ff}
+html{height:100%}
+html,body{margin:0;background:#02030a;color:var(--fg);font-family:Tahoma,"Segoe UI",Arial,sans-serif;overflow:hidden}
+body{height:100%}
+#stage{position:relative;width:100%;height:100%;overflow:hidden}
+#c{position:absolute;inset:0;width:100%;height:100%}
+#earth,#moon,#rocket,#hotel{position:absolute;transition:all 3s ease-in-out}
+#earth{width:70vmin;height:70vmin;left:50%;top:50%;margin:-35vmin 0 0 -35vmin;border-radius:50%;box-shadow:0 0 5vmin #4a90ff77}
+#moon{width:16vmin;height:16vmin;left:85%;top:12%;opacity:0;border-radius:50%;box-shadow:0 0 3vmin #fff3}
+#rocket{font-size:12vmin;left:50%;top:110%;margin-left:-6vmin;opacity:0;transform:rotate(-45deg)}
+#hotel{font-size:10vmin;left:18%;top:20%;opacity:0}
+.s1 #earth{transform:scale(2.2) translateY(55%)}
+.s2 #earth{transform:scale(.9)}
+.s3 #earth{transform:scale(.7) translate(-40%,30%)}
+.s3 #rocket{opacity:1;top:20%;left:55%}
+.s4 #earth{transform:scale(.6) translate(-45%,35%)}
+.s4 #moon{opacity:1;left:70%;top:15%}
+.s4 #hotel{opacity:1}
+.s5 #earth{transform:scale(1)}
+.s6 #earth{transform:scale(.25)}
+.s6 #moon{opacity:1;left:62%;top:42%;transform:scale(.4)}
+#text{position:absolute;left:0;right:0;bottom:22%;padding:0 7%;text-align:center;font-size:clamp(18px,4.4vw,34px);line-height:1.8;text-shadow:0 2px 14px #000;opacity:0;transition:opacity 1s}
+#text.on{opacity:1}
+#title{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));width:100%;text-align:center;font-size:13px;letter-spacing:1px;color:var(--acc);opacity:.8}
+#end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#02030acc;opacity:0;pointer-events:none;transition:opacity 1.5s;text-align:center;padding:0 8%}
+#end.on{opacity:1}
+#end h1{margin:0;font-size:clamp(24px,6vw,44px)}
+#end p{margin:0;font-size:clamp(16px,3.6vw,24px);color:var(--acc)}
+#ctl{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:0;right:0;display:flex;align-items:center;gap:10px;padding:0 5%}
+button{background:#ffffff1f;color:#fff;border:1px solid #ffffff44;border-radius:20px;padding:8px 14px;font-size:14px;cursor:pointer;font-family:inherit}
+#bar{flex:1;height:5px;background:#ffffff2a;border-radius:3px;overflow:hidden}
+#fill{height:100%;width:0;background:var(--acc)}
+#cover{position:absolute;inset:0;background:#02030a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;z-index:5;text-align:center;padding:0 8%}
+#cover h1{margin:0;font-size:clamp(26px,7vw,48px)}
+#cover button{font-size:20px;padding:12px 30px;background:var(--acc);color:#012;border:0}
+.credit{font-size:clamp(14px,3.4vw,20px);color:#cfe3ff}
+</style>
+</head>
+<body>
+<div id="stage" class="s1">
+<canvas id="c"></canvas>
+<canvas id="earth" width="240" height="240"></canvas><canvas id="moon" width="170" height="170"></canvas><div id="rocket">🚀</div><div id="hotel">🏨</div>
+<div id="title">أسبوع الفضاء العالمي</div>
+<div id="text"></div>
+<div id="end"><h1>الفضاء… جزء من مستقبلنا</h1><div style="font-size:8vmin">🌍 → 🌙 → 🚀</div><p>إعداد الطالبتين</p><p style="color:#fff;font-size:clamp(20px,5vw,32px)">مجد العرمان &nbsp;و&nbsp; رهف الكريشان</p></div>
+<div id="ctl"><button id="pp">⏸</button><div id="bar"><div id="fill"></div></div><button id="mu">🔊</button><button id="re">↺</button></div>
+<div id="cover"><div style="font-size:14vmin">🌍</div><h1>الفضاء… جزء من مستقبلنا</h1><div class="credit">إعداد الطالبتين: مجد العرمان و رهف الكريشان</div><button id="go">▶ تشغيل الفيديو</button></div>
+</div>
+<script>
+const scenes=[
+["تخيّل… تستيقظ صباحًا، تفتح نافذتك… وترى الأرض من الفضاء.",7],
+["الفضاء لم يعد مجرد مكان بعيد نراقبه من الأرض… بل أصبح مجالًا تتطور فيه التكنولوجيا، وتُبنى فيه أفكار قد تغيّر مستقبلنا.",9],
+["هناك شركات تعمل على تطوير رحلات سياحية إلى الفضاء، بل وتوجد خطط مستقبلية لبناء فنادق مخصصة للسياح خارج الأرض.",9],
+["وربما في المستقبل… لن يكون السؤال: إلى أي دولة ستسافر في إجازتك؟ بل: إلى القمر… أم إلى فندق يدور حول الأرض؟",9],
+["ويأتي أسبوع الفضاء العالمي كل عام ليحتفي باستكشاف الفضاء، ويعرّفنا بالتقنيات والإنجازات التي جعلت الوصول إلى الفضاء ممكنًا.",9],
+["الفضاء ليس بعيدًا كما نعتقد… ربما يكون جزءًا من مستقبلنا.",7]];
+const total=scenes.reduce((a,s)=>a+s[1],0)+7;
+const $=id=>document.getElementById(id),st=$('stage'),tx=$('text'),en=$('end');
+let t=0,playing=false,cur=-1,last=0,muted=false,ac,master;
+// stars
+const cv=$('c'),x=cv.getContext('2d');let W,H,stars=[];
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight;stars=Array.from({length:160},()=>({x:Math.random()*W,y:Math.random()*H,z:Math.random()*2+.3}))}
+rs();addEventListener('resize',rs);
+(function draw(){x.clearRect(0,0,W,H);x.fillStyle='#fff';for(const s of stars){if(playing)s.x-=s.z*.25;if(s.x<0)s.x=W;x.globalAlpha=.4+s.z/3;x.fillRect(s.x,s.y,s.z,s.z)}requestAnimationFrame(draw)})();
+// music
+function startAudio(){if(ac)return;try{
+ac=new(window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=.07;
+const len=ac.sampleRate*4,ir=ac.createBuffer(2,len,ac.sampleRate);
+for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.5)}
+const rv=ac.createConvolver();rv.buffer=ir;const rg=ac.createGain();rg.gain.value=.9;
+const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=900;lp.Q.value=.7;
+const lf=ac.createOscillator(),lfg=ac.createGain();lf.frequency.value=.05;lfg.gain.value=500;lf.connect(lfg);lfg.connect(lp.frequency);lf.start();
+lp.connect(master);lp.connect(rv);rv.connect(rg);rg.connect(master);master.connect(ac.destination);
+[[55,.9],[82.4,.5],[110,.35],[164.8,.25],[220.5,.15]].forEach(([f,v],i)=>{for(const dt of[-4,4]){const o=ac.createOscillator(),g=ac.createGain();o.type=i<2?'sine':'sawtooth';o.frequency.value=f;o.detune.value=dt;g.gain.value=v*(i<2?1:.25);o.connect(g);g.connect(lp);o.start()}});
+const nb=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
+const ns=ac.createBufferSource();ns.buffer=nb;ns.loop=true;const bp=ac.createBiquadFilter();bp.type='bandpass';bp.frequency.value=400;bp.Q.value=2;const ng=ac.createGain();ng.gain.value=.12;ns.connect(bp);bp.connect(ng);ng.connect(rv);ns.start();
+const sc=[293.7,349.2,440,523.3,587.3,698.5,880];
+(function sp(){if(ac&&ac.state==='running'){const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime;o.type='sine';o.frequency.value=sc[Math.random()*sc.length|0]*(Math.random()<.3?2:1);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.6,t+.05);g.gain.exponentialRampToValueAtTime(.001,t+5);o.connect(g);g.connect(rv);o.start(t);o.stop(t+5.2)}setTimeout(sp,2500+Math.random()*4500)})();
+}catch(e){}}
+function setScene(i){cur=i;if(i<scenes.length){st.className='s'+(i+1);en.classList.remove('on');tx.classList.remove('on');setTimeout(()=>{if(cur===i){tx.textContent=scenes[i][0];tx.classList.add('on')}},700)}else{tx.classList.remove('on');en.classList.add('on')}}
+function sceneAt(tt){let a=0;for(let i=0;i<scenes.length;i++){a+=scenes[i][1];if(tt<a)return i}return scenes.length}
+function loop(n){if(playing){t+=(n-last)/1000;if(t>=total){t=total;playing=false;$('pp').textContent='▶'}
+const i=sceneAt(t);if(i!==cur)setScene(i);$('fill').style.width=(t/total*100)+'%'}last=n;requestAnimationFrame(loop)}
+requestAnimationFrame(n=>{last=n;loop(n)});
+$('go').onclick=()=>{$('cover').style.display='none';startAudio();playing=true;t=0;cur=-1};
+$('pp').onclick=()=>{if(t>=total){t=0;cur=-1}playing=!playing;$('pp').textContent=playing?'⏸':'▶';if(ac)playing?ac.resume():ac.suspend()};
+$('re').onclick=()=>{t=0;cur=-1;playing=true;$('pp').textContent='⏸';if(ac)ac.resume()};
+$('mu').onclick=()=>{muted=!muted;if(master)master.gain.value=muted?0:.07;$('mu').textContent=muted?'🔇':'🔊'};
+$('bar').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();let p=(e.clientX-r.left)/r.width;p=1-(p<0?0:p>1?1:p);};
+
+// ---- realistic procedural Earth & Moon ----
+const hs=(i,j,k)=>{const s=Math.sin(i*127.1+j*311.7+k*74.7)*43758.5453;return s-Math.floor(s)};
+const L_=(a,b,t)=>a+(b-a)*t;
+function vn(x,y,z){const i=Math.floor(x),j=Math.floor(y),k=Math.floor(z),fx=x-i,fy=y-j,fz=z-k,u=fx*fx*(3-2*fx),v=fy*fy*(3-2*fy),w=fz*fz*(3-2*fz);
+return L_(L_(L_(hs(i,j,k),hs(i+1,j,k),u),L_(hs(i,j+1,k),hs(i+1,j+1,k),u),v),L_(L_(hs(i,j,k+1),hs(i+1,j,k+1),u),L_(hs(i,j+1,k+1),hs(i+1,j+1,k+1),u),v),w)}
+function fbm(x,y,z,o){let a=.5,s=0;for(let q=0;q<o;q++){s+=a*vn(x,y,z);x*=2.03;y*=2.03;z*=2.03;a*=.5}return s}
+const cl=(v,a,b)=>v<a?a:v>b?b:v;
+const TW=512,TH=256,tex=new Uint8ClampedArray(TW*TH*3),cld=new Uint8Array(TW*TH),cty=new Uint8Array(TW*TH),oc=new Uint8Array(TW*TH);
+for(let v=0;v<TH;v++){const lat=(.5-(v+.5)/TH)*Math.PI;for(let u=0;u<TW;u++){const lon=((u+.5)/TW-.5)*2*Math.PI,X=Math.cos(lat)*Math.cos(lon),Y=Math.sin(lat),Z=Math.cos(lat)*Math.sin(lon),t=v*TW+u,n=fbm(X*1.9+7,Y*1.9,Z*1.9,5),a=Math.abs(Y);let r,g,b;
+if(n>.52){const m=fbm(X*4+3,Y*4,Z*4+1,3),h=cl((n-.52)*4,0,1);r=55+m*120+h*35;g=110+m*35-h*35;b=50+m*45;if(a>.8+(m-.5)*.15){r=g=235;b=245}else if(vn(X*40,Y*40,Z*40)>.8&&a<.7)cty[t]=1}
+else{const k=cl((.52-n)*3,0,1);r=42-k*32;g=125-k*70;b=195-k*65;oc[t]=1;if(a>.88){r=g=225;b=240;oc[t]=0}}
+tex[t*3]=r;tex[t*3+1]=g;tex[t*3+2]=b;cld[t]=cl((fbm(X*3.2+20,Y*5+4,Z*3.2,5)-.5)*4,0,1)*255}}
+const EN=240,ec=document.getElementById('earth').getContext('2d'),eimg=ec.createImageData(EN,EN),pix=[];
+for(let py=0;py<EN;py++)for(let px=0;px<EN;px++){const nx=(px+.5)/EN*2-1,ny=1-(py+.5)/EN*2,r2=nx*nx+ny*ny;if(r2>=1)continue;const nz=Math.sqrt(1-r2);
+pix.push({o:(py*EN+px)*4,lat:Math.asin(ny),lon:Math.atan2(nx,nz),d:-.5*nx+.25*ny+.83*nz,rim:Math.pow(1-nz,2.6),al:cl((1-Math.sqrt(r2))*EN/2,0,1)*255})}
+let rot=0;
+function drawEarth(){const D=eimg.data;for(const p of pix){const f=x=>{const q=((x/(2*Math.PI)+.5)%1+1)%1;return q},
+t=((.5-p.lat/Math.PI)*TH|0)*TW+(f(p.lon+rot)*TW|0),tc=((.5-p.lat/Math.PI)*TH|0)*TW+(f(p.lon+rot*1.12)*TW|0),Ld=p.d<0?0:p.d,sh=.07+.93*Math.pow(Ld,.75),c=cld[tc]/255*.88;
+let r=tex[t*3]*sh,g=tex[t*3+1]*sh,b=tex[t*3+2]*sh;
+if(oc[t]){const sp=Math.pow(Ld,22)*70;r+=sp;g+=sp;b+=sp}
+if(cty[t]&&p.d<.12&&c<.3){const k=(.12-p.d)/.12*(1-c*3);r+=255*k;g+=190*k;b+=80*k}
+const cs=250*sh;r=r*(1-c)+cs*c;g=g*(1-c)+cs*c;b=b*(1-c)+(cs+3)*c;
+const rm=p.rim*(.25+Ld*1.1);r+=70*rm;g+=140*rm;b+=255*rm;
+const o=p.o;D[o]=r;D[o+1]=g;D[o+2]=b;D[o+3]=p.al}ec.putImageData(eimg,0,0)}
+function crater(x,y,z,s){x*=s;y*=s;z*=s;const i=Math.floor(x),j=Math.floor(y),k=Math.floor(z);let r=0;
+for(let a=-1;a<2;a++)for(let b=-1;b<2;b++)for(let c=-1;c<2;c++){const ci=i+a,cj=j+b,ck=k+c;if(hs(ci,cj,ck)<.55)continue;
+const d=Math.hypot(x-(ci+hs(ci+1,cj,ck)),y-(cj+hs(ci,cj+1,ck)),z-(ck+hs(ci,cj,ck+1))),rad=.12+.25*hs(ci,cj+5,ck);if(d<rad){const q=d/rad;r+=q<.8?-.2*(1-q*.6):.2*(1-q)*5}}return r}
+(function(){const N=170,c=document.getElementById('moon').getContext('2d'),im=c.createImageData(N,N),D=im.data;
+for(let py=0;py<N;py++)for(let px=0;px<N;px++){const nx=(px+.5)/N*2-1,ny=1-(py+.5)/N*2,r2=nx*nx+ny*ny;if(r2>=1)continue;const nz=Math.sqrt(1-r2),X=nx+3,Y=ny,Z=nz;
+let v=.62+.5*(fbm(X*4,Y*4,Z*4,4)-.5);v*=1-.4*cl((fbm(X*1.4+9,Y*1.4,Z*1.4,3)-.5)*8,0,1);v+=crater(X,Y,Z,5)+.6*crater(X,Y,Z,11);
+const d=cl(-.55*nx+.25*ny+.8*nz,0,1),o=(py*N+px)*4,val=cl(v*(.04+.96*Math.pow(d,.8)),0,1)*255;D[o]=val;D[o+1]=val*.98;D[o+2]=val*.94;D[o+3]=cl((1-Math.sqrt(r2))*N/2,0,1)*255}
+c.putImageData(im,0,0)})();
+let lt=performance.now();(function er(n){rot+=Math.min(.1,(n-lt)/1000)*.14;lt=n;drawEarth();requestAnimationFrame(er)})(lt);
+</script>
+</body>
+</html>
